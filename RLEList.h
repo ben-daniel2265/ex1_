@@ -165,6 +165,9 @@ RLEList RLEListCreate(){
 }
 
 void  RLEListDestroy(RLEList list){
+    if(!list){
+        return;
+    }
     while(list) {
         RLEList toDelete = list;
         list = list->next;
@@ -179,7 +182,7 @@ RLEListResult RLEListAppend(RLEList list, char value){
     while(list->next){
         list = list->next;
     }
-    RLEList node = malloc(sizeof(*node));
+    RLEList node = (RLEList)malloc(sizeof(*node));
     if(!node){
         return RLE_LIST_OUT_OF_MEMORY;
     }
@@ -190,13 +193,38 @@ RLEListResult RLEListAppend(RLEList list, char value){
     }
 }
 int RLEListSize(RLEList list){
+    int count = 0;
+    if(!list){
+        return -1;
+    }
     while(list){
-        return 1 + RLEListSize(list->next);
+        list = list->next;
+        count++;
     }
 }
+
+/**
+*   RLEListRemove: Removes a character found at a specified index in an RLE list.
+*
+* @param list - The RLE list to remove the character from.
+* @param index - The index at which the character to be removed is found.
+* @return
+* 	RLE_LIST_NULL_ARGUMENT if a NULL was sent to the function.
+* 	RLE_LIST_INDEX_OUT_OF_BOUNDS if given index is not withing the list's bounds.
+* 	RLE_LIST_SUCCESS the character found at index has been removed successfully.
+*/
+
 RLEListResult RLEListRemove(RLEList list, int index){
+    if(!list || !index){
+        return RLE_LIST_NULL_ARGUMENT;
+    }
+    int bounds = RLEListSize(list);
+    if(index > bounds){
+        return RLE_LIST_INDEX_OUT_OF_BOUNDS;
+    }
     for(int i = 0; i < index; i++){
         list = list->next;
     }
     list->next = list->next->next;
+    return RLE_LIST_SUCCESS;
 }
