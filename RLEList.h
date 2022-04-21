@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 /**
 * Run Length Encoding List
@@ -28,7 +29,12 @@
 /** 
 * Typedef for defining the RLE list.
 * Complete the implementation of struct RLEList_t defined in RLEList.c
-*/
+ *
+*/typedef struct RLEList_t{
+    char data;
+    struct RLEList_t* next;
+} *RLEList;
+
 typedef struct RLEList_t *RLEList;
 
 /** Enum used for returning error codes from RLE list functions */
@@ -39,7 +45,6 @@ typedef enum {
     RLE_LIST_INDEX_OUT_OF_BOUNDS,
     RLE_LIST_ERROR
 } RLEListResult;
-
 
 /** 
  * Type of function for mapping characters.
@@ -149,3 +154,49 @@ RLEListResult RLEListMap(RLEList list, MapFunction map_function);
 
 
 #endif // HW1_RLELIST_H
+
+RLEList RLEListCreate(){
+    RLEList list = (RLEList)malloc(sizeof(*list));
+    if(!list){
+        return NULL;
+    }
+    list->data = NULL;
+    return list;
+}
+
+void  RLEListDestroy(RLEList list){
+    while(list) {
+        RLEList toDelete = list;
+        list = list->next;
+        free(toDelete);
+    }
+}
+
+RLEListResult RLEListAppend(RLEList list, char value){
+    if(!list || !value){
+        return RLE_LIST_NULL_ARGUMENT;
+    }
+    while(list->next){
+        list = list->next;
+    }
+    RLEList node = malloc(sizeof(*node));
+    if(!node){
+        return RLE_LIST_OUT_OF_MEMORY;
+    }
+    node->data = value;
+    list->next = node;
+    if(list->next->data == value){
+        return RLE_LIST_SUCCESS;
+    }
+}
+int RLEListSize(RLEList list){
+    while(list){
+        return 1 + RLEListSize(list->next);
+    }
+}
+RLEListResult RLEListRemove(RLEList list, int index){
+    for(int i = 0; i < index; i++){
+        list = list->next;
+    }
+    list->next = list->next->next;
+}
