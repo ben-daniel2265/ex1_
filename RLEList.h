@@ -161,10 +161,12 @@ RLEList RLEListCreate(){
         return NULL;
     }
     list->data = NULL;
+    list->next = NULL;
+
     return list;
 }
 
-void  RLEListDestroy(RLEList list){
+void RLEListDestroy(RLEList list){
     if(!list){
         return;
     }
@@ -197,18 +199,15 @@ RLEListResult RLEListAppend(RLEList list, char value){
 }
 
 int RLEListSize(RLEList list){
-    printf("l");
-    int count = 0;
+    int count = 1;
     if(!list){
         return -1;
     }
 
-    printf("l");
     while(list->next != NULL){
         list = list->next;
         count++;
     }
-    printf("l");
     return count;
 }
 
@@ -252,7 +251,6 @@ RLEListResult RLEListRemove(RLEList list, int index){
 * 	The character found at given index in case of success.   
 */
 char RLEListGet(RLEList list, int index, RLEListResult *result){
-    printf("l");
     if(!list){
         *result = RLE_LIST_NULL_ARGUMENT;
         return 0;
@@ -264,7 +262,7 @@ char RLEListGet(RLEList list, int index, RLEListResult *result){
     }
 
     
-    while(index >= 0){
+    while(index > 0){
         list = list->next;
         index -= 1;
     }
@@ -283,10 +281,10 @@ char RLEListGet(RLEList list, int index, RLEListResult *result){
 * @return
 * 	NULL if result is not RLE_LIST_SUCCESS.
 * 	The string that corresponds to the received RLE list.
-
+*/
 
 int first_digit(int num){
-    while(num > 10){
+    while(num >= 10){
         num = num / 10;
     }
     return num;
@@ -300,34 +298,68 @@ char* RLEListExportToString(RLEList list, RLEListResult* result){
 
     int count_chunks = 1;
 
+    char* string = (char *)malloc(sizeof(char)*RLEListSize(list)*4);
     RLEList temp1 = list;
     RLEList temp2 = list->next;
 
+    int str_len = 0;
     int chunk_size = 1;
     int index = 0;
-    int numsize = 1;
     temp1 = list;
     temp2 = list->next;
 
     while(temp2){
         if(!(temp1->data == temp2->data)){
-            result[index] = temp1->data;
+            string[str_len] = temp1->data;
+            str_len++;
             while(chunk_size != 0){
-                result[index + numsize] = first_digit(chunk_size);
+                string[str_len] = 48 + first_digit(chunk_size);
+                str_len++;
                 chunk_size = chunk_size / 10;
-                numsize++;
             }
-            result[index + numsize] = '\n';
-            chunk_size = 1;
-            numsize = 1;
+            string[str_len] = '\n';
+            str_len++;
+            chunk_size = 0;
+        }
+
+        chunk_size++;
+
+
+        if(!(temp2->next)){
+            if(!(temp1->data == temp2->data)){
+                string[str_len] = temp2->data;
+                str_len++;
+                string[str_len] = 48 + 1;
+                str_len++;
+                string[str_len] = '\n';
+                str_len++;
+            }
         }
 
         temp1 = temp1->next;
         temp2 = temp2->next;
     }
 
-    return result;
-}*/
+    if(str_len == 0){
+        string[str_len] = list->data;
+        str_len++;
+        
+        while(chunk_size != 0){
+            string[str_len] = 48 + first_digit(chunk_size);
+            str_len++;
+            chunk_size = chunk_size / 10;
+        }
+        string[str_len] = '\n';
+    }
+
+    string[str_len] = '\0';
+
+
+    string = (char*)realloc(string, str_len);
+
+    *result = RLE_LIST_SUCCESS;
+    return string;
+}
 
 /**
 *   RLEListMap: Change the given RLE list's characters according to the received mapping function.
