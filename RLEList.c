@@ -1,5 +1,7 @@
+#ifndef INCLUDED
+#define INCLUDED
+
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include "RLEList.h"
 
@@ -18,8 +20,8 @@ RLEList RLEListCreate(){
     if(!list){
         return NULL;
     }
-    list->character = NULL;
-    list->amount = NULL;
+    list->character = 0;
+    list->amount = 0;
     list->next = NULL;
 
     return list;
@@ -45,8 +47,9 @@ RLEListResult RLEListAppend(RLEList list, char value){
         list = list->next;
     }
 
-    if(list->character == value){
+    if(list->character == value || list->character == NULL){
         list->amount++;
+        list->character = value;
         return RLE_LIST_SUCCESS;
     }
 
@@ -76,50 +79,52 @@ int RLEListSize(RLEList list){
     return count;
 }
 
-RLEListResult RLEListRemove(RLEList list, int index){
-    if(!list){
+RLEListResult RLEListRemove(RLEList list, int index) {
+    if (!list) {
         return RLE_LIST_NULL_ARGUMENT;
     }
 
-    if(!(0 <= index && index < RLEListSize(list))){
+    if (!(0 <= index && index < RLEListSize(list))) {
         return RLE_LIST_INDEX_OUT_OF_BOUNDS;
     }
 
     int amount_in_node;
     RLEList previous_node = NULL;
 
-    while(index > 0){
+    while (index > 0) {
         amount_in_node = list->amount;
-        while(amount_in_node && index){
+        while (amount_in_node && index) {
             amount_in_node -= 1;
             index -= 1;
         }
 
-        if(index >= 0 && amount_in_node == 0){
+        if (index >= 0 && amount_in_node == 0) {
             previous_node = list;
             list = list->next;
-
         }
     }
 
     RLEList temp;
     list->amount -= 1;
-    if(!(list->amount)){
-        if(list->next){
-            list->amount = list->next->amount;
-            list->character = list->next->character;
+    if (previous_node) {
+        if (!(list->amount)) {
+            if (list->next) {
+                list->amount = list->next->amount;
+                list->character = list->next->character;
 
-            temp = list->next;
-            list->next = list->next->next;
-            free(temp);
+                temp = list->next;
+                list->next = list->next->next;
+                free(temp);
 
-            if(previous_node->character == list->character){
-                previous_node->amount = previous_node->amount + list->amount;
-                previous_node->next = list->next;
-                free(list);
+
+                if (previous_node->character == list->character) {
+                    previous_node->amount = previous_node->amount + list->amount;
+                    previous_node->next = list->next;
+                    free(list);
+                }
             }
         }
-        else{
+        else {
             free(list);
             previous_node->next = NULL;
         }
@@ -131,29 +136,27 @@ RLEListResult RLEListRemove(RLEList list, int index){
 
 char RLEListGet(RLEList list, int index, RLEListResult *result){
     if(!list){
-        *result = RLE_LIST_NULL_ARGUMENT;
+        if(result != NULL) {
+            *result = RLE_LIST_NULL_ARGUMENT;
+        }
         return 0;
     }
 
-    if(!(0 <= index && index < RLEListSize(list))){
-        *result = RLE_LIST_INDEX_OUT_OF_BOUNDS;
+    if(0 > index || index >= RLEListSize(list)){
+        if(result != NULL) {
+            *result = RLE_LIST_INDEX_OUT_OF_BOUNDS;
+        }
         return 0;
     }
 
-    int amount_in_node;
-    while(index > 0){
-        amount_in_node = list->amount;
-        while(amount_in_node && index){
-            amount_in_node -= 1;
-            index -= 1;
-        }
-
-        if(index >= 0){
-            list = list->next;
-        }
+    int count = list->amount;
+    while(count < index+1)
+    {
+        list = list->next;
+        count += list->amount;
     }
-
-    *result = RLE_LIST_SUCCESS;
+    if(result != NULL)
+        *result = RLE_LIST_SUCCESS;
     return list->character;
 }
 
@@ -223,3 +226,4 @@ RLEListResult RLEListMap(RLEList list, MapFunction map_function){
 
     return RLE_LIST_SUCCESS;
 }
+#endif

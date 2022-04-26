@@ -12,7 +12,7 @@ int main(){
     scanf("%c", &in);
     list->character = in;
 
-    for(int i = 0; i < 5; i ++){
+    for(int i = 0; i < 10; i ++){
         scanf("%c", &in);
         RLEListAppend(list, in);
     }
@@ -20,7 +20,7 @@ int main(){
     RLEListResult res;
     printf("%s", RLEListExportToString(list, &res));
 
-    RLEListRemove(list, 3);
+    RLEListRemove(list, 6);
 
     printf("gae\n%s", RLEListExportToString(list, &res));
 

@@ -6,4 +6,4 @@ set(CMAKE_C_STANDARD 11)
 include_directories(.)
 include_directories(tests)
 
-add_executable(ex1_ main.c)
+add_executable(ex1_ RLEList_example_test.c RLEList.c)

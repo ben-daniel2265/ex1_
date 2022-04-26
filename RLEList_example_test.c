@@ -1,3 +1,5 @@
+#ifndef INCLUDED
+#define INCLUDED
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -78,7 +80,7 @@ bool basicTest(){
     for(int i=0; i<RLEListSize(list); i++)
     {
         it=RLEListGet(list, i, NULL);
-        ASSERT_TEST(it == s[i++], destroy);
+        ASSERT_TEST(it == s[i], destroy);
     }
     //check if the length's are equal
     ASSERT_TEST(RLEListSize(list)==strlen(s), destroy);
@@ -87,3 +89,4 @@ bool basicTest(){
     RLEListDestroy(list);
     return result;
 }
+#endif

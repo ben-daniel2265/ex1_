@@ -72,8 +72,15 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 
 build cmake_object_order_depends_target_ex1_: phony || CMakeFiles/ex1_.dir
 
-build CMakeFiles/ex1_.dir/main.c.o: C_COMPILER__ex1__Debug /Users/yonatanelbaz/ex1_/main.c || cmake_object_order_depends_target_ex1_
-  DEP_FILE = CMakeFiles/ex1_.dir/main.c.o.d
+build CMakeFiles/ex1_.dir/RLEList_example_test.c.o: C_COMPILER__ex1__Debug /Users/yonatanelbaz/ex1_/RLEList_example_test.c || cmake_object_order_depends_target_ex1_
+  DEP_FILE = CMakeFiles/ex1_.dir/RLEList_example_test.c.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu11
+  INCLUDES = -I/Users/yonatanelbaz/ex1_/. -I/Users/yonatanelbaz/ex1_/tests
+  OBJECT_DIR = CMakeFiles/ex1_.dir
+  OBJECT_FILE_DIR = CMakeFiles/ex1_.dir
+
+build CMakeFiles/ex1_.dir/RLEList.c.o: C_COMPILER__ex1__Debug /Users/yonatanelbaz/ex1_/RLEList.c || cmake_object_order_depends_target_ex1_
+  DEP_FILE = CMakeFiles/ex1_.dir/RLEList.c.o.d
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu11
   INCLUDES = -I/Users/yonatanelbaz/ex1_/. -I/Users/yonatanelbaz/ex1_/tests
   OBJECT_DIR = CMakeFiles/ex1_.dir
@@ -87,7 +94,7 @@ build CMakeFiles/ex1_.dir/main.c.o: C_COMPILER__ex1__Debug /Users/yonatanelbaz/e
 #############################################
 # Link the executable ex1_
 
-build ex1_: C_EXECUTABLE_LINKER__ex1__Debug CMakeFiles/ex1_.dir/main.c.o
+build ex1_: C_EXECUTABLE_LINKER__ex1__Debug CMakeFiles/ex1_.dir/RLEList_example_test.c.o CMakeFiles/ex1_.dir/RLEList.c.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
   OBJECT_DIR = CMakeFiles/ex1_.dir
   POST_BUILD = :
