@@ -47,7 +47,7 @@ RLEListResult RLEListAppend(RLEList list, char value){
 
     if(list->character == value){
         list->amount++;
-        return RLE_LIST_SUCCESS;;
+        return RLE_LIST_SUCCESS;
     }
 
     RLEList node = (RLEList)malloc(sizeof(*node));
