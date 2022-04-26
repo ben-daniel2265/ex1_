@@ -95,9 +95,10 @@ RLEListResult RLEListRemove(RLEList list, int index){
             index -= 1;
         }
 
-        if(index >= 0){
+        if(index >= 0 && amount_in_node == 0){
             previous_node = list;
             list = list->next;
+
         }
     }
 
@@ -111,6 +112,12 @@ RLEListResult RLEListRemove(RLEList list, int index){
             temp = list->next;
             list->next = list->next->next;
             free(temp);
+
+            if(previous_node->character == list->character){
+                previous_node->amount = previous_node->amount + list->amount;
+                previous_node->next = list->next;
+                free(list);
+            }
         }
         else{
             free(list);
