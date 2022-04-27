@@ -1,8 +1,10 @@
+#ifndef ASCII_ART_TOOL_INCLUDED
+#define ASCII_ART_TOOL_INCLUDED
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include "AsciiArtTool.h"
-#include "../RLEList.c"
 
 
 RLEList AsciiArtRead(FILE* in_stream){
@@ -28,16 +30,12 @@ RLEListResult AsciiArtPrint(RLEList list, FILE *out_stream){
     int list_size = RLEListSize(list);
     char* out_string = (char*)malloc(sizeof(char)*list_size + 1);
     char* temp = out_string;
-    int amount_in_node;
+    RLEListResult result;
 
-    while(list){
-        amount_in_node = list->amount;
-        while(amount_in_node){
-            *temp = list->character;
-            temp++;
-            amount_in_node--;
-        }
-        list = list->next;
+    for(int i = 0; i < list_size; i++){
+        *temp = RLEListGet(list, i, &result);
+        temp++;
+
     }
     *temp = '\0';
 
@@ -65,3 +63,4 @@ RLEListResult AsciiArtPrintEncoded(RLEList list, FILE *out_stream){
         return RLE_LIST_ERROR;
     }
 }
+#endif
