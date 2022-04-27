@@ -36,6 +36,7 @@ void RLEListDestroy(RLEList list){
         list = list->next;
         free(toDelete);
     }
+    return;
 }
 
 RLEListResult RLEListAppend(RLEList list, char value){
